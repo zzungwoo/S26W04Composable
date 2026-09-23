@@ -48,18 +48,37 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 fun MainScreen() {
+    var count1 by remember { mutableStateOf(0)}
+    var count2 by remember { mutableStateOf(0)}
+
     Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
         Column(
             modifier = Modifier.padding(innerPadding)
         ) {
-            Counter()
+            Counter(
+                modifer = Modifier.background(Color(0xFFE8DEF8)),
+                count = count1
+            ) {
+                count1 = it
+            }
+
+            Counter(
+                modifer = Modifier.background(Color(0XFFE9F680)),
+                count = count2
+            ) {
+                count2 = it
+            }
         }
     }
 }
 
 @Composable
-fun ColumnScope.Counter() {
-    var count by remember { mutableIntStateOf(0) }
+fun ColumnScope.Counter(
+    modifer: Modifier = Modifier,
+    count: Int,
+    onChangeCount: (Int) -> Unit,
+) {
+    //var count by remember { mutableIntStateOf(0) }
     var expanded by remember { mutableStateOf(false) }
 
     Column(
@@ -87,7 +106,7 @@ fun ColumnScope.Counter() {
                     .weight(1f)
                     .padding(8.dp),
                 onClick = {
-                    count++
+                    onChangeCount(count + 1)
                 }
             ) {
                 Icon(
@@ -116,7 +135,7 @@ fun ColumnScope.Counter() {
                         .weight(1f)
                         .padding(8.dp),
                     onClick = {
-                        count--
+                        onChangeCount(count - 1)
                         expanded = false
                     }
                 ) {
@@ -127,7 +146,8 @@ fun ColumnScope.Counter() {
                         .weight(1f)
                         .padding(8.dp),
                     onClick = {
-                        count = 0
+                        onChangeCount(0)
+
                         expanded = false
                     }
                 ) {
